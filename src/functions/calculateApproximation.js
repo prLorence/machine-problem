@@ -1,20 +1,9 @@
-const context = {
-  approximationMethod: ""
+import * as math from 'mathjs';
+
+export const calculateTrueError = (trueValue, approximateValue) => {
+  return math.abs(trueValue - approximateValue);
 }
 
-export const calculateApproximation = Object.create(context);
-
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf
-// https://refactoring.guru/design-patterns/strategy
-
-const strategy = {
-  setStrategy: function (approximationMethod) {
-    this.approximationMethod = approximationMethod;
-  },
-
-  calculate: function (equation, decimalPlace) {
-    return this.approximationMethod.calculate(equation, decimalPlace);
-  }
+export const calculateRelativeError = (trueValue, approximateValue) => {
+  return math.abs((trueValue - approximateValue) / trueValue) * 100;
 }
-
-Object.setPrototypeOf(calculateApproximation, strategy);

@@ -1,8 +1,20 @@
 import { useState } from 'react'
 import './App.css'
-import { Modal, FormLabel, Radio, RadioGroup, FormControlLabel, FormControl, TextField, InputLabel, Button, FormGroup} from '@mui/material'
-import { calculateApproximation } from './functions/calculateApproximation';
+import {
+  FormLabel,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  TextField,
+  Button,
+  FormGroup
+} from '@mui/material'
+import * as math from "mathjs";
 
+// strategy pattern
+import { context } from './functions/context';
+import { calculateTrueError, calculateRelativeError} from './functions/calculateApproximation';
 import { Chop as ChopStrategy} from "./functions/Chop";
 import { Round as RoundStrategy} from "./functions/Round";
 
@@ -14,10 +26,11 @@ function App() {
   const [decimalPlace, setDecimalPlace] = useState(0);
   const [isCalculate, setIsCalculate] = useState(false);
   const [isChopping, setIsChopping] = useState(false);
+  const [approximateValue, setApproximateValue] = useState(0);
+  const [trueValue, setTrueValue] = useState(0);
   
-  // context
-  calculateApproximation.setStrategy(isChopping ? Chop : Round);
-
+  context.setStrategy(isChopping ? Chop : Round);
+  
   function handleChangeEquation(e) {
     setEquation(e.target.value);
   }
@@ -27,6 +40,8 @@ function App() {
   }
 
   function handleCalculate(e) {
+    setTrueValue(math.evaluate(equation));
+    setApproximateValue(context.approximationMethod.approximate(equation, decimalPlace));
     setIsCalculate(true);
     e.preventDefault();
   }
@@ -58,8 +73,8 @@ function App() {
               onChange={handleRadioChange}
               row
             >
-              <FormControlLabel value="Chop" control={<Radio />} label={Chop.constructor.name} />
-              <FormControlLabel value="Round" control={<Radio />} label={Round.constructor.name} />
+            <FormControlLabel value="Chop" control={<Radio disabled={isCalculate} />} label={Chop.constructor.name} />
+            <FormControlLabel value="Round" control={<Radio disabled={isCalculate} />} label={Round.constructor.name} />
             </RadioGroup>
           </FormControl>
           <TextField
@@ -76,12 +91,14 @@ function App() {
             value={decimalPlace}
             onChange={handleChangeDecimalPlace} />
 
-          <Button type="submit" onClick={handleCalculate}>
+          {!isCalculate && <Button type="submit" onClick={handleCalculate}>
             Calculate
-          </Button>
+          </Button>}
 
           {isCalculate && <Button onClick={resetForm}> Restart </Button>}
-          {isCalculate && `${calculateApproximation.calculate(equation, decimalPlace)}`}
+          {isCalculate && `Approximated Value: ${context.approximationMethod.approximate(equation, decimalPlace)}`}
+          {isCalculate && `True Error of Approximation: ${calculateTrueError(trueValue, approximateValue)}`}
+          {isCalculate && `Relative Error of Approximation: ${calculateRelativeError(trueValue, approximateValue)} %`}
       </FormGroup>
     </div>
   )

@@ -3,7 +3,7 @@ import * as math from "mathjs";
 
 export class Round {
   constructor() {
-    this.calculate = function () {
+    this.approximate = function () {
       try {
         // do the calculations here
         return `Rounding method`;
