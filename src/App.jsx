@@ -1,34 +1,68 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
+import { Modal, Box, FormControl, TextField, InputLabel, Button, FormGroup} from '@mui/material'
+import { calculateApproximation } from './functions/calculateApproximation';
 
-import getNthRoot from './functions/testMath'
+import { Chop as ChopStrategy} from "./functions/Chop";
+import { Round as RoundStrategy} from "./functions/Round";
+
+const Chop = new ChopStrategy();
+const Round = new RoundStrategy();
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [equation, setEquation] = useState("");
+  const [decimalPlace, setDecimalPlace] = useState(0);
+  const [isCalculate, setIsCalculate] = useState(false);
+  const [isChopping, setIsChopping] = useState(true);
+
+  // context
+  calculateApproximation.setStrategy(isChopping ? Chop : Round);
+
+  function handleChangeEquation(e) {
+    setEquation(e.target.value);
+  }
+
+  function handleChangeDecimalPlace(e) {
+    setDecimalPlace(e.target.value);
+  }
+
+  function handleCalculate(e) {
+    setIsCalculate(true);
+    e.preventDefault();
+  }
+
+  function resetForm(e) {
+    setEquation("");
+    setDecimalPlace(0);
+    setIsCalculate(false);
+    e.preventDefault();
+  }
+
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => console.log(getNthRoot())}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <FormGroup>
+          <TextField
+            id="equation"
+            label="Enter your equation"
+            disabled={isCalculate}
+            value={equation}
+            onChange={handleChangeEquation} />
+
+          <TextField
+            id="decimal-place"
+            label="Decimal Places"
+            disabled={isCalculate}
+            value={decimalPlace}
+            onChange={handleChangeDecimalPlace} />
+
+          <Button type="submit" onClick={handleCalculate}>
+            Calculate
+          </Button>
+
+          {isCalculate && <Button onClick={resetForm}> Restart </Button>}
+          {isCalculate && `${calculateApproximation.calculate(equation, decimalPlace)}`}
+      </FormGroup>
     </div>
   )
 }
