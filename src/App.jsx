@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { Modal, Box, FormControl, TextField, InputLabel, Button, FormGroup} from '@mui/material'
+import { Modal, FormLabel, Radio, RadioGroup, FormControlLabel, FormControl, TextField, InputLabel, Button, FormGroup} from '@mui/material'
 import { calculateApproximation } from './functions/calculateApproximation';
 
 import { Chop as ChopStrategy} from "./functions/Chop";
@@ -13,8 +13,8 @@ function App() {
   const [equation, setEquation] = useState("");
   const [decimalPlace, setDecimalPlace] = useState(0);
   const [isCalculate, setIsCalculate] = useState(false);
-  const [isChopping, setIsChopping] = useState(true);
-
+  const [isChopping, setIsChopping] = useState(false);
+  
   // context
   calculateApproximation.setStrategy(isChopping ? Chop : Round);
 
@@ -38,10 +38,30 @@ function App() {
     e.preventDefault();
   }
 
+  function handleRadioChange(e) {
+    if (e.target.value === "Chop") {
+      setIsChopping(true);
+      return;
+    }
+    setIsChopping(!isChopping);
+  }
 
   return (
     <div className="App">
       <FormGroup>
+        <FormControl>
+            <FormLabel id="demo-radio-buttons-group-label">Approximation Method</FormLabel>
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue="female"
+              name="radio-buttons-group"
+              onChange={handleRadioChange}
+              row
+            >
+              <FormControlLabel value="Chop" control={<Radio />} label={Chop.constructor.name} />
+              <FormControlLabel value="Round" control={<Radio />} label={Round.constructor.name} />
+            </RadioGroup>
+          </FormControl>
           <TextField
             id="equation"
             label="Enter your equation"

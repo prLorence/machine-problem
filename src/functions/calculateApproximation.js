@@ -5,6 +5,7 @@ const context = {
 export const calculateApproximation = Object.create(context);
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf
+// https://refactoring.guru/design-patterns/strategy
 
 const strategy = {
   setStrategy: function (approximationMethod) {
