@@ -12,8 +12,7 @@ export class Chop {
         return resultChopped;
         // return `Chopping result: ${resultChopped}`;
       } catch (e) {
-        console.log(e);
-        return `There was a problem processing your request: ${e.message}`
+        alert(`There was a problem processing your request: ${e.message}`)
       }
     }
   };

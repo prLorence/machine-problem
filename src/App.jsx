@@ -1,107 +1,42 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import './App.css'
-import {
-  FormLabel,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  TextField,
-  Button,
-  FormGroup
-} from '@mui/material'
-import * as math from "mathjs";
 
 // strategy pattern
-import { context } from './functions/context';
-import { calculateTrueError, calculateRelativeError} from './functions/calculateApproximation';
-import { Chop as ChopStrategy} from "./functions/Chop";
-import { Round as RoundStrategy} from "./functions/Round";
-
-const Chop = new ChopStrategy();
-const Round = new RoundStrategy();
+import ErrorPropagation from './components/ErrorPropagation';
+import TaylorPolynomial from './components/TaylorPolynomial';
 
 function App() {
-  const [equation, setEquation] = useState("");
-  const [decimalPlace, setDecimalPlace] = useState(0);
-  const [isCalculate, setIsCalculate] = useState(false);
-  const [isChopping, setIsChopping] = useState(false);
-  const [approximateValue, setApproximateValue] = useState(0);
-  const [trueValue, setTrueValue] = useState(0);
-  
-  context.setStrategy(isChopping ? Chop : Round);
-  
-  function handleChangeEquation(e) {
-    setEquation(e.target.value);
-  }
+ const [option, setOption] = useState('approximation');
 
-  function handleChangeDecimalPlace(e) {
-    setDecimalPlace(e.target.value);
-  }
-
-  function handleCalculate(e) {
-    setTrueValue(math.evaluate(equation));
-    setApproximateValue(context.approximationMethod.approximate(equation, decimalPlace));
-    setIsCalculate(true);
-    e.preventDefault();
-  }
-
-  function resetForm(e) {
-    setEquation("");
-    setDecimalPlace(0);
-    setIsCalculate(false);
-    e.preventDefault();
-  }
-
-  function handleRadioChange(e) {
-    if (e.target.value === "Chop") {
-      setIsChopping(true);
-      return;
-    }
-    setIsChopping(!isChopping);
-  }
+  const handleChange = (event) => {
+    setOption(event.target.value);
+  };
 
   return (
     <div className="App">
-      <FormGroup>
-        <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">Approximation Method</FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="female"
-              name="radio-buttons-group"
-              onChange={handleRadioChange}
-              row
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+            <Select
+              id="select"
+              defaultValue='approximation'
+              value={option}
+              onChange={handleChange}
             >
-            <FormControlLabel value="Chop" control={<Radio disabled={isCalculate} />} label={Chop.constructor.name} />
-            <FormControlLabel value="Round" control={<Radio disabled={isCalculate} />} label={Round.constructor.name} />
-            </RadioGroup>
-          </FormControl>
-          <TextField
-            id="equation"
-            label="Enter your equation"
-            disabled={isCalculate}
-            value={equation}
-            onChange={handleChangeEquation} />
+            <MenuItem value={'approximation'}>Error Propagated Approximation</MenuItem>
+            <MenuItem value={'taylor'}>Taylor's Polynomial</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
 
-          <TextField
-            id="decimal-place"
-            label="Decimal Places"
-            disabled={isCalculate}
-            value={decimalPlace}
-            onChange={handleChangeDecimalPlace} />
-
-          {!isCalculate && <Button type="submit" onClick={handleCalculate}>
-            Calculate
-          </Button>}
-
-          {isCalculate && <Button onClick={resetForm}> Restart </Button>}
-          {isCalculate && `Approximated Value: ${context.approximationMethod.approximate(equation, decimalPlace)}`}
-          {isCalculate && `True Error of Approximation: ${calculateTrueError(trueValue, approximateValue)}`}
-          {isCalculate && `Relative Error of Approximation: ${calculateRelativeError(trueValue, approximateValue)} %`}
-      </FormGroup>
+      {option == "taylor" && <TaylorPolynomial/> }
+      {option == "approximation" && <ErrorPropagation/> }
     </div>
-  )
+  );
 }
 
 export default App
