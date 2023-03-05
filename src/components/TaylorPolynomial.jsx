@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom';
 import {
   Typography,
   TextField,
   Button,
+  Box,
   FormGroup
 } from '@mui/material'
 
@@ -10,53 +12,59 @@ import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
 
 // strategy pattern
+const style = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  width: "100%",
+  maxWidth: "500px",
+  flexWrap: "wrap"
+  // alignItems: 'center',
+}
+
+const formStyle = {
+  width: "100%",
+  maxWidth: "500px"
+}
+
 
 import getTaylor from '../functions/getTaylor';
-import calculateTaylor from '../functions/calculateTaylor';
 import { inputStyle } from './ErrorPropagation';
 
 function TaylorPolynomial() {
   const [degree, setDegree] = useState(0);
-  const [taylorParam, setTaylorParam] = useState(0);
-  const [taylorValue, setTaylorValue] = useState('');
+  const [taylorEquation, setTaylorEquation] = useState('');
   const [isCalculate, setIsCalculate] = useState(false);
 
   function handleChangeDegree(e) {
     setDegree(e.target.value);
   }
 
-  function handleChangeParam(e) {
-    setTaylorParam(e.target.value);
-  }
-
   function handleSubmit() {
-    calculateTaylor(taylorParam);
     setIsCalculate(true);
-    setTaylorValue(getTaylor(degree));
+    setTaylorEquation(getTaylor(degree));
   }
 
   function handleReset(e) {
+    setTaylorEquation('');
     setDegree(0)
-    setTaylorValue('');
-    setTaylorParam(0);
     setIsCalculate(false);
     e.preventDefault();
   }
 
   return (
-    <div>
-      <Typography variant='h2'>
-        ln (x + 1)
-      </Typography>
-      <FormGroup>
-
-        <TextField sx={inputStyle} label='Degree' value={degree} onChange={handleChangeDegree} />
-        {/* <TextField label='x' value={taylorParam} onChange={handleChangeParam} /> */}
+    <Box sx={style}>
+      <FormGroup sx={formStyle} fullWidth>
+        <Typography variant='h2'>
+          ln (x + 1)
+        </Typography>
+        <TextField sx={inputStyle} disabled={isCalculate} label='Degree' value={degree} onChange={handleChangeDegree} />
         {!isCalculate && <Button variant="contained" sx={inputStyle} type="submit" onClick={handleSubmit}> Calculate </Button>}
         {isCalculate && <Button variant="contained" sx={inputStyle} onClick={handleReset}> Reset </Button>}
-        {isCalculate && <BlockMath>{taylorValue}</BlockMath>}
       </FormGroup>
-    </div>
+      {/* where math equation happens */}
+        {isCalculate && <BlockMath >{taylorEquation}</BlockMath>}
+    </Box>
   )
 }
 

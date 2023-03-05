@@ -1,9 +1,7 @@
 import * as math from 'mathjs';
 
-export let taylorEquation = '';
-export let resultingSeries = 'x';
-
 export default function getTaylor(degree) {
+  let taylorEquation = 'x';
   for (let i = 2; i <= degree; i++) {
     const constant = math.pow(-1, i + 1);
     let temp;
@@ -11,9 +9,8 @@ export default function getTaylor(degree) {
     if (i % 2 == 0) {
       temp = `${constant}/${i}x^${i}`
     }
-    resultingSeries += temp;
+    taylorEquation += temp;
   }
-  taylorEquation = math.parse(resultingSeries);
-  console.log(resultingSeries)
+  taylorEquation = math.parse(taylorEquation);
   return taylorEquation.toTex();
 }

@@ -58,7 +58,7 @@ function ErrorPropagation() {
   const [approximateMethod, setApproximateMethod] = useState(null);
   const [errMessage, setErrMessage] = useState("");
   
-  context.setStrategy(approximateMethod ? Chop : Round);
+  context.setStrategy(approximateMethod == "Chop" ? Chop : Round);
 
   function handleChangeEquation(e) {
     setEquation(e.target.value);
@@ -69,6 +69,7 @@ function ErrorPropagation() {
   }
 
   function handleSubmit(e) {
+    console.log(approximateMethod);
     if (approximateMethod === null) {
       setErrMessage('Please choose an approximation method.');
       return;
@@ -91,6 +92,7 @@ function ErrorPropagation() {
 
   function resetForm(e) {
     setEquation("");
+    setErrMessage("");
     setDecimalPlace(0);
     setIsCalculate(false);
     e.preventDefault();

@@ -14,10 +14,18 @@ const style = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
-  marginBottom: "1em",
-  // alignItems: 'center',
-  height: "100vh",
   width: "100%",
+  maxWidth: "500px",
+  // alignItems: 'center',
+}
+
+const mainContainer = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  marginBottom: "1em",
+  height: "100vh",
+  width: "100vw",
 }
 
 function App() {
@@ -29,23 +37,25 @@ function App() {
 
   return (
     <div className="App">
-      <Box sx={style}>
-        <Box sx={{ minWidth: 120, marginBottom: "1em"}}>
-          <FormControl fullWidth>
-              <Select
-                id="select"
-                defaultValue='approximation'
-                value={option}
-                onChange={handleChange}
-              >
-              <MenuItem value={'approximation'}>Error Propagated Approximation</MenuItem>
-              <MenuItem value={'taylor'}>Taylor's Polynomial</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
+      <Box sx={mainContainer}>
+        <Box sx={style}>
+          <Box sx={{ marginBottom: "1em"}}>
+            <FormControl fullWidth>
+                <Select
+                  id="select"
+                  defaultValue='approximation'
+                  value={option}
+                  onChange={handleChange}
+                >
+                <MenuItem value={'approximation'}>Error Propagated Approximation</MenuItem>
+                <MenuItem value={'taylor'}>Taylor's Polynomial</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
-        {option == "taylor" && <TaylorPolynomial/> }
-        {option == "approximation" && <ErrorPropagation/> }
+          {option == "taylor" && <TaylorPolynomial/> }
+          {option == "approximation" && <ErrorPropagation/> }
+        </Box>
       </Box>
     </div>
   );
