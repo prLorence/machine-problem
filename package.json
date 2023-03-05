@@ -15,7 +15,8 @@
     "katex": "^0.16.4",
     "mathjs": "^11.6.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-katex": "^3.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

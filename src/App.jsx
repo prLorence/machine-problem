@@ -10,6 +10,16 @@ import './App.css'
 import ErrorPropagation from './components/ErrorPropagation';
 import TaylorPolynomial from './components/TaylorPolynomial';
 
+const style = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  marginBottom: "1em",
+  // alignItems: 'center',
+  height: "100vh",
+  width: "100%",
+}
+
 function App() {
  const [option, setOption] = useState('approximation');
 
@@ -19,22 +29,24 @@ function App() {
 
   return (
     <div className="App">
-      <Box sx={{ minWidth: 120 }}>
-        <FormControl fullWidth>
-            <Select
-              id="select"
-              defaultValue='approximation'
-              value={option}
-              onChange={handleChange}
-            >
-            <MenuItem value={'approximation'}>Error Propagated Approximation</MenuItem>
-            <MenuItem value={'taylor'}>Taylor's Polynomial</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+      <Box sx={style}>
+        <Box sx={{ minWidth: 120, marginBottom: "1em"}}>
+          <FormControl fullWidth>
+              <Select
+                id="select"
+                defaultValue='approximation'
+                value={option}
+                onChange={handleChange}
+              >
+              <MenuItem value={'approximation'}>Error Propagated Approximation</MenuItem>
+              <MenuItem value={'taylor'}>Taylor's Polynomial</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
 
-      {option == "taylor" && <TaylorPolynomial/> }
-      {option == "approximation" && <ErrorPropagation/> }
+        {option == "taylor" && <TaylorPolynomial/> }
+        {option == "approximation" && <ErrorPropagation/> }
+      </Box>
     </div>
   );
 }

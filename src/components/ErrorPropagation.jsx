@@ -23,6 +23,32 @@ import { Round as RoundStrategy} from "../functions/Round";
 const Chop = new ChopStrategy();
 const Round = new RoundStrategy();
 
+const containerStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  // alignItems: 'center',
+}
+
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  height: "100%"
+  // alignItems: 'center',
+}
+
+const radioStyle = {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: "center",
+  justifyContent: "space-around",
+}
+
+export const inputStyle = {
+  marginTop: "1em",
+  marginBottom: "1em"
+}
+
 function ErrorPropagation() {
   const [equation, setEquation] = useState("");
   const [decimalPlace, setDecimalPlace] = useState(0);
@@ -75,11 +101,12 @@ function ErrorPropagation() {
   }
 
   return (
-    <div className="App">
-      <FormGroup>
+    <Box sx={containerStyle}>
+      <FormGroup sx={formStyle}>
         <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">Approximation Method</FormLabel>
             <RadioGroup
+              sx={radioStyle}
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue=""
               name="radio-buttons-group"
@@ -91,6 +118,7 @@ function ErrorPropagation() {
             </RadioGroup>
           </FormControl>
           <TextField
+            sx={inputStyle}
             id="equation"
             label="Enter your equation"
             disabled={isCalculate}
@@ -98,22 +126,23 @@ function ErrorPropagation() {
             onChange={handleChangeEquation} />
 
           <TextField
+            sx={inputStyle}
             id="decimal-place"
             label="Decimal Places"
             disabled={isCalculate}
             value={decimalPlace}
             onChange={handleChangeDecimalPlace} />
 
-          {!isCalculate ? <Button type="submit" onClick={handleSubmit}>
+        {!isCalculate ? <Button sx={inputStyle} variant="contained" type="submit"  onClick={handleSubmit}>
             Calculate
-          </Button>: <Button onClick={resetForm}> Restart </Button>}
-          {!isCalculate && `${errMessage}`}
+        </Button> : <Button sx={inputStyle} variant="contained" onClick={resetForm}> Restart </Button>}
+          {!isCalculate && <Typography type="error" sx={{ color: "red"}}>{errMessage}</Typography>}
           {/* {isCalculate && <Button onClick={resetForm}> Restart </Button>}  */}
           {isCalculate && `Approximated Value: ${context.approximationMethod.approximate(equation, decimalPlace)}`}
           {isCalculate && `True Error of Approximation: ${calculateTrueError(trueValue, approximateValue)}`}
           {isCalculate && `Relative Error of Approximation: ${calculateRelativeError(trueValue, approximateValue)} %`}
       </FormGroup>
-    </div>
+    </Box>
   )
 }
 

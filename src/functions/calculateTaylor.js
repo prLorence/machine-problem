@@ -1,12 +1,11 @@
 import * as math from 'mathjs';
+import { resultingSeries } from './getTaylor';
 
-export default function calculateTaylor(degree) {
-  let resultingSeries = 'x';
-  for (let i = 2; i <= degree; i++) {
-    let temp = `${math.pow(-1, i + 1)}x^${i}/${i}`
-    resultingSeries += temp;
+export default function calculateTaylor(val) {
+  let taylor = math.parse(resultingSeries);
+  taylor = taylor.compile();
+  let scope = {
+    x: val
   }
-  const result = math.parse(resultingSeries);
-  console.log(result.toTex());
-  return result.toTex();
+  console.log(taylor.evaluate(scope));
 }

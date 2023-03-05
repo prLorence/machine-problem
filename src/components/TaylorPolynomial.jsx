@@ -1,61 +1,60 @@
 import { useState } from 'react'
 import {
   Typography,
-  FormLabel,
   TextField,
   Button,
   FormGroup
 } from '@mui/material'
-import * as math from "mathjs";
+
+import 'katex/dist/katex.min.css';
+import { BlockMath } from 'react-katex';
 
 // strategy pattern
-import { context } from '../functions/context';
-import { calculateTrueError, calculateRelativeError} from '../functions/calculateApproximation';
-import { Chop as ChopStrategy} from "../functions/Chop";
-import { Round as RoundStrategy} from "../functions/Round";
-import calculateTaylor from '../functions/calculateTaylor';
-import katex from "katex";
 
+import getTaylor from '../functions/getTaylor';
+import calculateTaylor from '../functions/calculateTaylor';
+import { inputStyle } from './ErrorPropagation';
 
 function TaylorPolynomial() {
-  const [degree, setDegree] = useState(1);
+  const [degree, setDegree] = useState(0);
+  const [taylorParam, setTaylorParam] = useState(0);
   const [taylorValue, setTaylorValue] = useState('');
   const [isCalculate, setIsCalculate] = useState(false);
-
-  function renderText() {
-    console.log(katex.renderToString(taylorValue));
-    return katex.render(taylorValue)
-  }
 
   function handleChangeDegree(e) {
     setDegree(e.target.value);
   }
 
-  function handleSubmit() {
-    setIsCalculate(true);
-    setTaylorValue(calculateTaylor(degree));
+  function handleChangeParam(e) {
+    setTaylorParam(e.target.value);
   }
 
-  function resetForm(e) {
-    setEquation("");
-    setDecimalPlace(0);
+  function handleSubmit() {
+    calculateTaylor(taylorParam);
+    setIsCalculate(true);
+    setTaylorValue(getTaylor(degree));
+  }
+
+  function handleReset(e) {
+    setDegree(0)
+    setTaylorValue('');
+    setTaylorParam(0);
     setIsCalculate(false);
     e.preventDefault();
   }
 
   return (
     <div>
-      <Typography variant='h1'>
+      <Typography variant='h2'>
         ln (x + 1)
       </Typography>
       <FormGroup>
 
-        <TextField label='Degree' value={degree} onChange={handleChangeDegree} />
-        <TextField label='x' />
-        <Button type="submit" onClick={handleSubmit}>
-          Calculate
-        </Button>
-        {isCalculate && renderText()}
+        <TextField sx={inputStyle} label='Degree' value={degree} onChange={handleChangeDegree} />
+        {/* <TextField label='x' value={taylorParam} onChange={handleChangeParam} /> */}
+        {!isCalculate && <Button variant="contained" sx={inputStyle} type="submit" onClick={handleSubmit}> Calculate </Button>}
+        {isCalculate && <Button variant="contained" sx={inputStyle} onClick={handleReset}> Reset </Button>}
+        {isCalculate && <BlockMath>{taylorValue}</BlockMath>}
       </FormGroup>
     </div>
   )
