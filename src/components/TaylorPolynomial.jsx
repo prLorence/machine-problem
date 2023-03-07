@@ -9,30 +9,47 @@ import {
 } from '@mui/material'
 
 import 'katex/dist/katex.min.css';
-import { BlockMath } from 'react-katex';
+import { InlineMath, BlockMath } from 'react-katex';
 
-// strategy pattern
+import getTaylor from '../functions/getTaylor';
+import calculateTaylor from '../functions/calculateTaylor';
+import { inputGroup, inputStyle} from './ErrorPropagation';
+
+const outputContainer = {
+  marginTop: "1em",
+  marginBottom: "0.5em",
+  display: "flex",
+  justifyContent: "space-around"
+}
+
 const style = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   width: "100%",
-  maxWidth: "500px",
+  maxWidth: "700px",
   flexWrap: "wrap"
-  // alignItems: 'center',
+}
+
+const mathContainer = {
+  display: "flex",
+  width: "100%",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center"
 }
 
 const formStyle = {
   width: "100%",
-  maxWidth: "500px"
+  maxWidth: "700px"
 }
 
-
-import getTaylor from '../functions/getTaylor';
-import { inputStyle } from './ErrorPropagation';
-
 function TaylorPolynomial() {
+  // input values
   const [degree, setDegree] = useState(0);
+  const [taylorValue, setTaylorValue] = useState(0);
+  const [decimalPlace, setDecimalPlace] = useState(0);
+
   const [taylorEquation, setTaylorEquation] = useState('');
   const [isCalculate, setIsCalculate] = useState(false);
 
@@ -40,30 +57,54 @@ function TaylorPolynomial() {
     setDegree(e.target.value);
   }
 
+  function handleChangeTaylorValue(e) {
+    setTaylorValue(e.target.value);
+  }
+
+  function handleChangeDecimalPlace(e) {
+    setDecimalPlace(e.target.value);
+  }
+
   function handleSubmit() {
     setIsCalculate(true);
-    setTaylorEquation(getTaylor(degree));
+    setTaylorEquation(getTaylor(degree, taylorValue, decimalPlace));
   }
 
   function handleReset(e) {
+    e.preventDefault();
     setTaylorEquation('');
     setDegree(0)
+    setTaylorValue(0);
+    setDecimalPlace(0);
     setIsCalculate(false);
-    e.preventDefault();
   }
 
   return (
     <Box sx={style}>
-      <FormGroup sx={formStyle} fullWidth>
+      <FormGroup sx={formStyle}>
         <Typography variant='h2'>
           ln (x + 1)
         </Typography>
-        <TextField sx={inputStyle} disabled={isCalculate} label='Degree' value={degree} onChange={handleChangeDegree} />
-        {!isCalculate && <Button variant="contained" sx={inputStyle} type="submit" onClick={handleSubmit}> Calculate </Button>}
-        {isCalculate && <Button variant="contained" sx={inputStyle} onClick={handleReset}> Reset </Button>}
+
+        <Box sx={inputGroup}>
+          <TextField sx={inputStyle} disabled={isCalculate} label='Degree' value={degree} onChange={handleChangeDegree} />
+          <TextField sx={inputStyle} disabled={isCalculate} label='X' value={taylorValue} onChange={handleChangeTaylorValue} />
+          <TextField disabled={isCalculate} label='Decimal places' value={decimalPlace} onChange={handleChangeDecimalPlace} />
+        </Box>
+
+        {!isCalculate && <Button variant="contained" type="submit" onClick={handleSubmit}> Calculate </Button>}
+        {isCalculate && <Button variant="contained" onClick={handleReset}> Reset </Button>}
+
       </FormGroup>
-      {/* where math equation happens */}
-        {isCalculate && <BlockMath >{taylorEquation}</BlockMath>}
+        {/* where math equation happens */}
+        <Box sx={outputContainer}>
+          {isCalculate && <InlineMath>{`n=${degree}`}</InlineMath>}
+          {isCalculate && <InlineMath>{`x=${taylorValue}`}</InlineMath>}
+        </Box>
+        <Box sx={mathContainer}>
+        {isCalculate && <BlockMath >{`P_{${degree}}(x)=${taylorEquation}`}</BlockMath>}
+        {isCalculate && <BlockMath >{`P_{${degree}}(x) = ${calculateTaylor(degree, taylorValue, decimalPlace)}`}</BlockMath>}
+        </Box>
     </Box>
   )
 }

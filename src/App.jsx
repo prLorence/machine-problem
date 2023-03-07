@@ -15,7 +15,8 @@ const style = {
   flexDirection: 'column',
   justifyContent: 'center',
   width: "100%",
-  maxWidth: "500px",
+  height: "100%",
+  maxWidth: "700px",
   // alignItems: 'center',
 }
 
@@ -24,8 +25,8 @@ const mainContainer = {
   flexDirection: 'column',
   justifyContent: 'center',
   marginBottom: "1em",
-  height: "100vh",
-  width: "100vw",
+  height: "99vh",
+  width: "100%",
 }
 
 function App() {

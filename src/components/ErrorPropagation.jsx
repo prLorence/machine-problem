@@ -16,12 +16,12 @@ import * as math from "mathjs";
 
 // strategy pattern
 import { context } from '../functions/context';
-import { calculateTrueError, calculateRelativeError} from '../functions/calculateApproximation';
-import { Chop as ChopStrategy} from "../functions/Chop";
-import { Round as RoundStrategy} from "../functions/Round";
+import { calculateTrueError, calculateRelativeError } from '../functions/calculateApproximation';
 
-const Chop = new ChopStrategy();
-const Round = new RoundStrategy();
+import round from '../functions/Round';
+import chop from '../functions/Chop'
+import { typeOf } from 'mathjs';
+
 
 const containerStyle = {
   display: 'flex',
@@ -37,29 +37,46 @@ const formStyle = {
   // alignItems: 'center',
 }
 
-const radioStyle = {
+export const inputGroup = {
   display: 'flex',
   flexDirection: 'row',
   alignItems: "center",
   justifyContent: "space-around",
 }
 
+export const outputContainer = {
+  display: "flex",
+  marginTop: "1em"
+}
+
+const output = {
+  display: "flex",
+  flexDirection: "column",
+  textAlign: "left"
+}
+
 export const inputStyle = {
   marginTop: "1em",
+  marginBottom: "1em",
+  marginRight: "1em"
+}
+
+const outputText = {
   marginBottom: "1em"
 }
 
 function ErrorPropagation() {
+  // user input
   const [equation, setEquation] = useState("");
   const [decimalPlace, setDecimalPlace] = useState(0);
-  const [approximateValue, setApproximateValue] = useState(0);
-  const [trueValue, setTrueValue] = useState(0);
+  // approximate values
+  const [chopValue, setChopValue] = useState(0);
+  const [roundValue, setRoundValue] = useState(0);
+  
   const [isCalculate, setIsCalculate] = useState(false);
-  const [approximateMethod, setApproximateMethod] = useState(null);
+  const [trueValue, setTrueValue] = useState();
   const [errMessage, setErrMessage] = useState("");
   
-  context.setStrategy(approximateMethod == "Chop" ? Chop : Round);
-
   function handleChangeEquation(e) {
     setEquation(e.target.value);
   }
@@ -69,25 +86,22 @@ function ErrorPropagation() {
   }
 
   function handleSubmit(e) {
-    console.log(approximateMethod);
-    if (approximateMethod === null) {
-      setErrMessage('Please choose an approximation method.');
-      return;
-    }
-
     if (equation === "") {
       setErrMessage('Please enter a value to approximate');
       return;
     }
-
+    
+    setChopValue(chop(equation, decimalPlace))
+    setRoundValue(round(equation, decimalPlace))
+    
     try {
-      setTrueValue(math.evaluate(equation));
-      setApproximateValue(context.approximationMethod.approximate(equation, decimalPlace));
-      setIsCalculate(true);
       e.preventDefault();
+      setIsCalculate(true);
+      setTrueValue(math.evaluate(equation));
     } catch (e) {
       setErrMessage(`There was a problem processing your request: ${e.message}`)
     }
+
   }
 
   function resetForm(e) {
@@ -98,27 +112,11 @@ function ErrorPropagation() {
     e.preventDefault();
   }
 
-  function handleRadioChange(e) {
-    setApproximateMethod(e.target.value);
-  }
 
   return (
     <Box sx={containerStyle}>
-      <FormGroup sx={formStyle}>
-        <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">Approximation Method</FormLabel>
-            <RadioGroup
-              sx={radioStyle}
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue=""
-              name="radio-buttons-group"
-              onChange={handleRadioChange}
-              row
-            >
-            <FormControlLabel value="Chop" control={<Radio disabled={isCalculate} />} label={Chop.constructor.name} />
-            <FormControlLabel value="Round" control={<Radio disabled={isCalculate} />} label={Round.constructor.name} />
-            </RadioGroup>
-          </FormControl>
+      <FormGroup sx={formStyle} >
+        <FormControl sx={inputGroup}>
           <TextField
             sx={inputStyle}
             id="equation"
@@ -128,21 +126,33 @@ function ErrorPropagation() {
             onChange={handleChangeEquation} />
 
           <TextField
-            sx={inputStyle}
             id="decimal-place"
             label="Decimal Places"
             disabled={isCalculate}
             value={decimalPlace}
             onChange={handleChangeDecimalPlace} />
+        </FormControl>
 
-        {!isCalculate ? <Button sx={inputStyle} variant="contained" type="submit"  onClick={handleSubmit}>
+          {!isCalculate ? <Button variant="contained" type="submit" onClick={handleSubmit}>
             Calculate
-        </Button> : <Button sx={inputStyle} variant="contained" onClick={resetForm}> Restart </Button>}
+          </Button> : <Button variant="contained" onClick={resetForm}> Restart </Button>}
+
           {!isCalculate && <Typography type="error" sx={{ color: "red"}}>{errMessage}</Typography>}
-          {/* {isCalculate && <Button onClick={resetForm}> Restart </Button>}  */}
-          {isCalculate && `Approximated Value: ${context.approximationMethod.approximate(equation, decimalPlace)}`}
-          {isCalculate && `True Error of Approximation: ${calculateTrueError(trueValue, approximateValue)}`}
-          {isCalculate && `Relative Error of Approximation: ${calculateRelativeError(trueValue, approximateValue)} %`}
+
+        <Box sx={outputContainer}>
+          <Box sx={output}>
+            <Typography sx={outputText}>{isCalculate && `Chopped Value: ${chopValue}`}</Typography>
+            <Typography sx={outputText}>{isCalculate && `True Error (chop): ${calculateTrueError(trueValue, chopValue) }`}</Typography>
+            <Typography sx={outputText}>{isCalculate && `Relative Error (chop): ${calculateRelativeError(trueValue, chopValue)} %`}</Typography>
+          </Box>
+
+          <Box sx={output}>
+            <Typography sx={outputText}>{isCalculate && `Rounded Value: ${roundValue}`}</Typography>
+            <Typography sx={outputText}>{isCalculate && `True Error (round): ${calculateTrueError(trueValue, roundValue)}`}</Typography>
+            <Typography sx={outputText}>{isCalculate && `Relative Error (round): ${calculateRelativeError(trueValue, roundValue)} %`}</Typography>
+          </Box>
+        </Box>
+
       </FormGroup>
     </Box>
   )
