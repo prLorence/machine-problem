@@ -12,4 +12,4 @@ built with:
 - [vite](https://vitejs.dev/) - web build tool 
 - [react](https://reactjs.org/) - ui library
 - [mathjs](https://mathjs.org/) - math library
-- [mathjs](https://mathjax.org/) - for latex formatting
+- [reack-katex](https://github.com/talyssonoc/react-katex/tree/master/packages/react-katex) - for latex rendering

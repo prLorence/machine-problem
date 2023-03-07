@@ -67,7 +67,7 @@ const outputText = {
 
 function ErrorPropagation() {
   // user input
-  const [equation, setEquation] = useState("");
+  const [equation, setEquation] = useState("0");
   const [decimalPlace, setDecimalPlace] = useState(0);
   // approximate values
   const [chopValue, setChopValue] = useState(0);
@@ -152,6 +152,9 @@ function ErrorPropagation() {
             <Typography sx={outputText}>{isCalculate && `Relative Error (round): ${calculateRelativeError(trueValue, roundValue)} %`}</Typography>
           </Box>
         </Box>
+
+        <Typography>  <a href="https://mathjs.org/docs/expressions/parsing.html" target="_blank"> Syntax guide </a> </Typography>
+        <Typography>  <a href="https://mathjs.org/docs/reference/functions.html" target="_blank"> Functions </a> </Typography>
 
       </FormGroup>
     </Box>
