@@ -73,6 +73,7 @@ function ErrorPropagation() {
   const [chopValue, setChopValue] = useState(0);
   const [roundValue, setRoundValue] = useState(0);
   
+  const [remarks, setRemarks] = useState("");
   const [isCalculate, setIsCalculate] = useState(false);
   const [trueValue, setTrueValue] = useState();
   const [errMessage, setErrMessage] = useState("");
@@ -84,6 +85,7 @@ function ErrorPropagation() {
   function handleChangeDecimalPlace(e) {
     setDecimalPlace(e.target.value);
   }
+
 
   function handleSubmit(e) {
     if (equation === "") {
@@ -101,12 +103,13 @@ function ErrorPropagation() {
     } catch (e) {
       setErrMessage(`There was a problem processing your request: ${e.message}`)
     }
-
   }
+
 
   function resetForm(e) {
     setEquation("");
     setErrMessage("");
+    setRemarks("");
     setDecimalPlace(0);
     setIsCalculate(false);
     e.preventDefault();
@@ -139,6 +142,8 @@ function ErrorPropagation() {
 
           {!isCalculate && <Typography type="error" sx={{ color: "red"}}>{errMessage}</Typography>}
 
+        <Typography sx={{ marginTop: "1em" }}> {isCalculate && `True Value: ${trueValue}`}</Typography>
+
         <Box sx={outputContainer}>
           <Box sx={output}>
             <Typography sx={outputText}>{isCalculate && `Chopped Value: ${chopValue}`}</Typography>
@@ -152,6 +157,10 @@ function ErrorPropagation() {
             <Typography sx={outputText}>{isCalculate && `Relative Error (round): ${calculateRelativeError(trueValue, roundValue)} %`}</Typography>
           </Box>
         </Box>
+
+        <Typography sx={{ fontWeight: "bold", marginBottom: '0.5em' }}>
+          {isCalculate && `Answer = ${calculateTrueError(trueValue, chopValue) < calculateTrueError(trueValue, chopValue) ? chopValue : roundValue}`}
+        </Typography>
 
         <Typography>  <a href="https://mathjs.org/docs/expressions/parsing.html" target="_blank"> Syntax guide </a> </Typography>
         <Typography>  <a href="https://mathjs.org/docs/reference/functions.html" target="_blank"> Functions </a> </Typography>
