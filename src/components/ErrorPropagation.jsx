@@ -163,10 +163,10 @@ function ErrorPropagation() {
             {`Answer = ${calculateTrueError(trueValue, chopValue) < calculateTrueError(trueValue, chopValue) ? chopValue : roundValue}`}
           </Typography>
 
-          <Typography>  <a href="https://mathjs.org/docs/expressions/parsing.html" target="_blank"> Syntax guide </a> </Typography>
-          <Typography>  <a href="https://mathjs.org/docs/reference/functions.html" target="_blank"> Functions </a> </Typography>
         </>}
 
+        <Typography>  <a href="https://mathjs.org/docs/expressions/parsing.html" target="_blank"> Syntax guide </a> </Typography>
+        <Typography>  <a href="https://mathjs.org/docs/reference/functions.html" target="_blank"> Functions </a> </Typography>
       </FormGroup>
     </Box>
   )
