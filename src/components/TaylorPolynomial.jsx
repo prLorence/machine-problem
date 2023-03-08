@@ -103,7 +103,14 @@ function TaylorPolynomial() {
         </Box>
         <Box sx={mathContainer}>
         {isCalculate && <BlockMath >{`P_{${degree}}(x)=${taylorEquation}`}</BlockMath>}
-        {isCalculate && <BlockMath >{`P_{${degree}}(x) = ${calculateTaylor(degree, taylorValue, decimalPlace)}`}</BlockMath>}
+          <Box sx={{ display: "flex", width: "60%", justifyContent: 'space-around'}}> 
+            <Typography> (Chopped) </Typography>
+            {isCalculate && <InlineMath >{`P_{${degree}}(x) = ${calculateTaylor(degree, taylorValue, decimalPlace).chopped}`}</InlineMath>}
+          </Box>
+          <Box sx={{ display: "flex", width: "60%", justifyContent: 'space-around'}}> 
+          <Typography> (Rounded) </Typography>
+          {isCalculate && <InlineMath >{`P_{${degree}}(x) = ${calculateTaylor(degree, taylorValue, decimalPlace).rounded}`}</InlineMath>}
+          </Box>
         </Box>
     </Box>
   )

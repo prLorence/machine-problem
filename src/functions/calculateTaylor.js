@@ -1,5 +1,6 @@
 import * as math from "mathjs";
 import chop from "./Chop";
+import round from "./Round";
 
 export default function calculateTaylor(degree, taylorValue, decimalPlace) {
   let validEquation = `${taylorValue}`;
@@ -14,5 +15,5 @@ export default function calculateTaylor(degree, taylorValue, decimalPlace) {
   }
 
   // const trueValue = math.evaluate(validEquation);
-  return chop(validEquation, decimalPlace);
+  return {chopped: chop(validEquation, decimalPlace), rounded: round(validEquation, decimalPlace)};
 }
