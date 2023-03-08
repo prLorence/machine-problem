@@ -49,7 +49,7 @@ export const outputContainer = {
   marginTop: "1em"
 }
 
-const output = {
+export const output = {
   display: "flex",
   flexDirection: "column",
   textAlign: "left"
@@ -61,7 +61,7 @@ export const inputStyle = {
   marginRight: "1em"
 }
 
-const outputText = {
+export const outputText = {
   marginBottom: "1em"
 }
 
@@ -142,28 +142,30 @@ function ErrorPropagation() {
 
           {!isCalculate && <Typography type="error" sx={{ color: "red"}}>{errMessage}</Typography>}
 
-        <Typography sx={{ marginTop: "1em" }}> {isCalculate && `True Value: ${trueValue}`}</Typography>
+        {isCalculate && <>
+          <Typography sx={{ marginTop: "1em" }}> {`True Value: ${trueValue}`}</Typography>
 
-        <Box sx={outputContainer}>
-          <Box sx={output}>
-            <Typography sx={outputText}>{isCalculate && `Chopped Value: ${chopValue}`}</Typography>
-            <Typography sx={outputText}>{isCalculate && `True Error (chop): ${calculateTrueError(trueValue, chopValue) }`}</Typography>
-            <Typography sx={outputText}>{isCalculate && `Relative Error (chop): ${calculateRelativeError(trueValue, chopValue)} %`}</Typography>
+          <Box sx={outputContainer}>
+            <Box sx={output}>
+              <Typography sx={outputText}>{`Chopped Value: ${chopValue}`}</Typography>
+              <Typography sx={outputText}>{`True Error (chop): ${calculateTrueError(trueValue, chopValue) }`}</Typography>
+              <Typography sx={outputText}>{`Relative Error (chop): ${calculateRelativeError(trueValue, chopValue)} %`}</Typography>
+            </Box>
+
+            <Box sx={output}>
+              <Typography sx={outputText}>{`Rounded Value: ${roundValue}`}</Typography>
+              <Typography sx={outputText}>{`True Error (round): ${calculateTrueError(trueValue, roundValue)}`}</Typography>
+              <Typography sx={outputText}>{`Relative Error (round): ${calculateRelativeError(trueValue, roundValue)} %`}</Typography>
+            </Box>
           </Box>
 
-          <Box sx={output}>
-            <Typography sx={outputText}>{isCalculate && `Rounded Value: ${roundValue}`}</Typography>
-            <Typography sx={outputText}>{isCalculate && `True Error (round): ${calculateTrueError(trueValue, roundValue)}`}</Typography>
-            <Typography sx={outputText}>{isCalculate && `Relative Error (round): ${calculateRelativeError(trueValue, roundValue)} %`}</Typography>
-          </Box>
-        </Box>
+          <Typography sx={{ fontWeight: "bold", marginBottom: '0.5em' }}>
+            {`Answer = ${calculateTrueError(trueValue, chopValue) < calculateTrueError(trueValue, chopValue) ? chopValue : roundValue}`}
+          </Typography>
 
-        <Typography sx={{ fontWeight: "bold", marginBottom: '0.5em' }}>
-          {isCalculate && `Answer = ${calculateTrueError(trueValue, chopValue) < calculateTrueError(trueValue, chopValue) ? chopValue : roundValue}`}
-        </Typography>
-
-        <Typography>  <a href="https://mathjs.org/docs/expressions/parsing.html" target="_blank"> Syntax guide </a> </Typography>
-        <Typography>  <a href="https://mathjs.org/docs/reference/functions.html" target="_blank"> Functions </a> </Typography>
+          <Typography>  <a href="https://mathjs.org/docs/expressions/parsing.html" target="_blank"> Syntax guide </a> </Typography>
+          <Typography>  <a href="https://mathjs.org/docs/reference/functions.html" target="_blank"> Functions </a> </Typography>
+        </>}
 
       </FormGroup>
     </Box>

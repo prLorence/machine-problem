@@ -15,5 +15,5 @@ export default function calculateTaylor(degree, taylorValue, decimalPlace) {
   }
 
   // const trueValue = math.evaluate(validEquation);
-  return {chopped: chop(validEquation, decimalPlace), rounded: round(validEquation, decimalPlace)};
+  return {trueValue: math.evaluate(validEquation), chopped: chop(validEquation, decimalPlace), rounded: round(validEquation, decimalPlace)};
 }
