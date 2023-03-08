@@ -21,6 +21,7 @@ const style = {
 }
 
 const mainContainer = {
+  offSetY: "hidden",
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
